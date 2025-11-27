@@ -537,6 +537,7 @@ if(CONFIG_BOARD_TYPE_ALICHUANGTEST)
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills/*.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills/foc/*.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/interaction/core/*.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/interaction/core/*.c
         ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/interaction/sensors/*.cc
@@ -557,6 +558,10 @@ if(CONFIG_BOARD_TYPE_ALICHUANGTEST)
         list(APPEND ALICHUANGTEST_EXTRA_SOURCES ${ALICHUANGTEST_BLUFI_SOURCES})
     endif()
     list(APPEND BOARD_SOURCES ${ALICHUANGTEST_EXTRA_SOURCES})
+    list(APPEND INCLUDE_DIRS  ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}
+                              ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills
+                              ${CMAKE_CURRENT_SOURCE_DIR}/boards/${BOARD_TYPE}/skills/foc/include
+    )
 endif()
 
 list(APPEND SOURCES ${BOARD_SOURCES})

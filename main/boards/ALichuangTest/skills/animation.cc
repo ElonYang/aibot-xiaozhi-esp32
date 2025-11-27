@@ -210,7 +210,7 @@ void AnimaDisplay::SetupUI() {
 
     // 立即加载开机动画，尽早显示内容，避免空白屏
     // 音频会稍后在 Application::Start() 中播放（允许不完全同步）
-    lv_gif_set_src(animation_gif_, BOOT_GIF_PATH);
+    lv_gif_set_src(animation_gif_, &system_boot_up);
 
     // 检查 GIF 是否加载成功
     if (!lv_gif_is_loaded(animation_gif_)) {

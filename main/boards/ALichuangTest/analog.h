@@ -6,6 +6,7 @@
 #include <string.h>
 #include <esp_timer.h>
 #include "skills/motion.h"
+#include "bldc_as5600.h"
 
 /* 采样通道定义 */
 typedef enum {

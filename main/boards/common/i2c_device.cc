@@ -26,8 +26,13 @@ void I2cDevice::WriteReg(uint8_t reg, uint8_t value) {
 
 uint8_t I2cDevice::ReadReg(uint8_t reg) {
     uint8_t buffer[1];
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(i2c_device_, &reg, 1, buffer, 1, 100));
-    return buffer[0];
+    //ESP_ERROR_CHECK(i2c_master_transmit_receive(i2c_device_, &reg, 1, buffer, 1, 100));
+    if (i2c_master_transmit_receive(i2c_device_, &reg, 1, buffer, 1, 100) != ESP_OK) {
+        ESP_LOGE(TAG, "ReadReg Single ERR!");
+        return 0xFF;
+    } else {
+        return buffer[0];
+    }
 }
 
 void I2cDevice::ReadRegs(uint8_t reg, uint8_t* buffer, size_t length) {

@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <string>
 
+LV_IMAGE_DECLARE(system_boot_up);        // 启动动画
+
 // 前向声明
 enum class EmotionQuadrant;
 

@@ -16,6 +16,7 @@
 #include "i2c_bus_manager.h"
 #include "analog.h"
 #include "device_state_event.h"
+#include "skills/bldc_as5600.h"
 
 #if CONFIG_ENABLE_BLUETOOTH_PROVISIONING
 #include "boards/ALichuangTest/bluetooth_provisioning/blufi_provisioning.h"
@@ -55,7 +56,8 @@ class Pca9557 : public I2cDevice {
 public:
     Pca9557(i2c_master_bus_handle_t i2c_bus, uint8_t addr) : I2cDevice(i2c_bus, addr) {
         WriteReg(0x01, 0x03);
-        WriteReg(0x03, 0xf8);
+        WriteReg(0x03, 0xe0); // 0-4输出 5-6默认输入
+        //WriteReg(0x03, 0xf8);
     }
 
     void SetOutputState(uint8_t bit, uint8_t level) {
@@ -115,6 +117,7 @@ private:
     LocalResponseController* local_response_controller_ = nullptr; // 本地响应控制器
     TaskHandle_t delay_task_handle = nullptr;
     SDdata_Pro* sdhccard = nullptr;
+    As5600Sensor* as5600 = nullptr;
 
 #if CONFIG_LINGXI_ANIMA_UI
     // 动画相关成员变量
@@ -520,7 +523,7 @@ private:
         pca9685_ = new Pca9685(i2c_bus_, PCA9685_DEFAULT_ADDR);
         
         ESP_LOGI(TAG, "🔧 设置PCA9685 PWM频率为200Hz (适配DRV8837直流马达驱动)");
-        esp_err_t ret = pca9685_->Initialize(200);
+        esp_err_t ret = pca9685_->Initialize(1000);
         if (ret != ESP_OK) {
             ESP_LOGE(TAG, "Failed to initialize PCA9685: %s", esp_err_to_name(ret));
             delete pca9685_;
@@ -675,10 +678,15 @@ private:
     void InitialAngleSensor() {
         angle_sensor = new AngleSensor(motion_skill_);
         set_anglehd(angle_sensor);
+
+        as5600 = new As5600Sensor(i2c_bus_);
+        set_as5600hd(as5600);
+        BLDCModuleInit(as5600, pca9685_);
+        pca9557_->SetOutputState(4, 1);
     }
 
     void InitializeAdcSample() {
-        DRV_AdcInit();
+        //DRV_AdcInit();
     }
 
     void InitializeMcpTools() {
